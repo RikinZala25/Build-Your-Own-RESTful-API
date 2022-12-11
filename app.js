@@ -87,9 +87,9 @@ app.route("/articles/:articleTitle")
 
 .patch(function(req, res){
   const articleTitle = req.params.articleTitle;
-  Article.update(
+  Article.updateOne(
     {title: articleTitle},
-    {content: req.body.newContent},
+    {$set: req.body},
     function(err){
       if (!err){
         res.send("Successfully updated selected article.");
@@ -103,10 +103,9 @@ app.route("/articles/:articleTitle")
 
   const articleTitle = req.params.articleTitle;
 
-  Article.update(
+  Article.replaceOne(
     {title: articleTitle},
-    {content: req.body.newContent},
-    {overwrite: true},
+    {title: req.body.title, content: req.body.content},
     function(err){
       if (!err){
         res.send("Successfully updated the content of the selected article.");
@@ -119,7 +118,7 @@ app.route("/articles/:articleTitle")
 
 .delete(function(req, res){
   const articleTitle = req.params.articleTitle;
-  LostPet.findOneAndDelete({title: articleTitle}, function(err){
+  Article.deleteOne({title: articleTitle}, function(err){
     if (!err){
       res.send("Successfully deleted selected article.");
     } else {
